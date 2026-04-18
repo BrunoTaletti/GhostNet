@@ -29,6 +29,8 @@ Thumbs.db
 desktop.ini
 # macOS
 .DS_Store
+.spec
+
 
 # --- Temporários do Projeto ---
 # Caso queira ignorar logs de erro ou arquivos de texto de teste
