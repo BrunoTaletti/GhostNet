@@ -1,28 +1,54 @@
 @echo off
-setlocal enabledelayedexpansion
-echo [GhostNet] Iniciando Build...
+setlocal EnableDelayedExpansion
 
-:: 1. Script Python inline para auto-incrementar o version.txt
-echo import sys > bump.py
-echo v = open("version.txt", "r").read().strip().split('.') >> bump.py
-echo v[-1] = str(int(v[-1]) + 1) >> bump.py
-echo new_v = '.'.join(v) >> bump.py
-echo open("version.txt", "w").write(new_v) >> bump.py
-echo print(new_v) >> bump.py
+:: 1. CONTROLE DE VERSAO
+set VERSION_FILE=version.txt
+if not exist %VERSION_FILE% echo 0.0.0> %VERSION_FILE%
 
-:: Executa e pega a nova versão
-for /f "delims=" %%i in ('python bump.py') do set NEW_VERSION=%%i
-del bump.py
+for /f "tokens=1,2,3 delims=." %%a in (%VERSION_FILE%) do (
+    set MAJOR=%%a
+    set MINOR=%%b
+    set PATCH=%%c
+)
+set /a PATCH+=1
+set NEW_VERSION=%MAJOR%.%MINOR%.!PATCH!
+echo !NEW_VERSION!> %VERSION_FILE%
 
-echo Nova versao: !NEW_VERSION!
+echo ==========================================
+echo [ GHOSTNET ] INICIANDO BUILD v!NEW_VERSION!
+echo ==========================================
 
-:: 2. Compilando com PyInstaller
-:: Nota: Adicione --noconsole para esconder o terminal no fundo da interface grafica
-:: Ajustamos para incluir o app-logo.png, app-icon.ico e o version.txt no pacote
-echo [GhostNet] Gerando executavel...
-pyinstaller --noconfirm --onedir --windowed --icon "app-icon.ico" --add-data "app-logo.png;." --add-data "app-icon.ico;." --add-data "version.txt;."  "main.py"
+:: 2. LIMPEZA DE BUILDS ANTIGOS
+echo [*] Limpando pastas temporarias...
+rmdir /s /q build >nul 2>&1
+rmdir /s /q dist >nul 2>&1
 
-echo.
-echo [GhostNet] Build !NEW_VERSION! finalizado!
-echo O proximo passo e rodar seu script do Inno Setup apontando para a pasta 'dist/main'.
+:: 3. INSTALANDO DEPENDENCIAS
+echo [*] Verificando dependencias...
+pip install -r requirements.txt >nul 2>&1
+
+:: 4. COMPILACAO PYINSTALLER
+echo [*] Compilando binarios...
+pyinstaller ^
+--name "GhostNet" ^
+--onedir ^
+--windowed ^
+--noconsole ^
+--icon "app-icon.ico" ^
+--add-data "app-logo.png;." ^
+--add-data "app-icon.ico;." ^
+--add-data "version.txt;." ^
+--clean --noconfirm main.py
+
+:: 5. COMPILACAO DO INSTALADOR (INNO SETUP)
+echo ==========================================
+echo [*] Empacotando Instalador (Inno Setup)...
+echo ==========================================
+
+:: A flag /DMyAppVersion injeta a versao dinamicamente no .iss
+"C:\Program Files (x86)\Inno Setup 6\ISCC.exe" /DMyAppVersion="!NEW_VERSION!" install.iss
+
+echo ==========================================
+echo [ OK ] BUILD !NEW_VERSION! GERADO COM SUCESSO!
+echo ==========================================
 pause
