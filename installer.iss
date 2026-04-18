@@ -4,7 +4,7 @@
 ; O MyAppVersion é injetado pelo arquivo .bat via linha de comando
 
 [Setup]
-AppId={C8249114-8E0E-4796-9EC9-02C151C4A2A7}
+AppId={{C8249114-8E0E-4796-9EC9-02C151C4A2A7}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
 AppPublisher={#MyAppPublisher}
