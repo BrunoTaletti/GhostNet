@@ -31,7 +31,7 @@ pip install -r requirements.txt >nul 2>&1
 echo [*] Compilando binarios...
 pyinstaller ^
 --name "GhostNet" ^
---onedir ^
+--onefile ^
 --windowed ^
 --noconsole ^
 --icon "app-icon.ico" ^
@@ -46,7 +46,7 @@ echo [*] Empacotando Instalador (Inno Setup)...
 echo ==========================================
 
 :: A flag /DMyAppVersion injeta a versao dinamicamente no .iss
-"C:\Program Files (x86)\Inno Setup 6\ISCC.exe" /DMyAppVersion="!NEW_VERSION!" install.iss
+"C:\Program Files (x86)\Inno Setup 6\ISCC.exe" /DMyAppVersion="!NEW_VERSION!" installer.iss
 
 echo ==========================================
 echo [ OK ] BUILD !NEW_VERSION! GERADO COM SUCESSO!
