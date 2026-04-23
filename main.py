@@ -102,8 +102,8 @@ class GhostNetApp(QMainWindow):
         self.setStyleSheet("""
             QFrame#MainFrame {
                 background-color: #000000;
-                border: 1px solid #1A1A1A;
-                border-top: 2px solid #FFFFFF;
+                border: 1px solid #C6F91F;
+                border-top: 2px solid #C6F91F;
             }
             QLabel { color: #888888; font-family: 'Consolas'; }
             
@@ -138,8 +138,8 @@ class GhostNetApp(QMainWindow):
 
             /* Checkbox */
             QCheckBox { color: #555555; font-family: 'Consolas'; font-size: 10px; letter-spacing: 1px; }
-            QCheckBox::indicator { width: 12px; height: 12px; background: #050505; border: 1px solid #333333; }
-            QCheckBox::indicator:checked { background: #FFFFFF; }
+            QCheckBox::indicator { width: 12px; height: 12px; background: #050505; border: 1px solid #333333;}
+            QCheckBox::indicator:checked { background: #C6F91F;}
             
             /* Versão */
             QPushButton#VersionBtn {
@@ -162,7 +162,7 @@ class GhostNetApp(QMainWindow):
         title_layout.setContentsMargins(15, 0, 10, 0)
         
         title_label = QLabel("GHOST//NET")
-        title_label.setStyleSheet("color: #FFFFFF; font-weight: bold; font-size: 10px; letter-spacing: 2px;")
+        title_label.setStyleSheet("color: #C6F91F; font-weight: bold; font-size: 10px; letter-spacing: 2px;")
         
         min_btn = QPushButton("—")
         min_btn.setObjectName("MinBtn")
@@ -203,13 +203,13 @@ class GhostNetApp(QMainWindow):
         content_layout.addWidget(self.lbl_ip)
 
         # Status Label
-        self.lbl_status = QLabel("INITIALIZING...")
+        self.lbl_status = QLabel("SYS.INIT //")
         self.lbl_status.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.lbl_status.setFont(QFont("Consolas", 9, QFont.Weight.Bold))
         content_layout.addWidget(self.lbl_status)
 
         # Botão de Ação
-        self.btn_reload = QPushButton("[ ROTACIONAR IP ]")
+        self.btn_reload = QPushButton("// SYS.SYNC_IP //")
         self.btn_reload.setObjectName("ActionBtn")
         self.btn_reload.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
         self.btn_reload.clicked.connect(self.reload_ip)
@@ -278,19 +278,19 @@ class GhostNetApp(QMainWindow):
     def update_hud_text(self):
         self.hud_textbox.clear()
         if not self.history:
-            self.hud_textbox.append("> NO_DATA_LOGGED")
+            self.hud_textbox.append("NO_DATA_LOGGED //")
         else:
             current_ip = self.lbl_ip.text()
             logs = self.history[:100]
             for ip in logs:
                 # Adiciona o asterisco se for o IP atual
-                marker = " *" if ip == current_ip else ""
+                marker = '<span style="color: #C6F91F;"> *</span>' if ip == current_ip else ""
                 self.hud_textbox.append(f" [LOG] {ip}{marker}")
             
             self.hud_textbox.moveCursor(QTextCursor.MoveOperation.Start)
 
     def reload_ip(self):
-        self.lbl_status.setText("SYNCING_NETWORK...")
+        self.lbl_status.setText("SYS.SYNCING_NETWORK")
         self.lbl_status.setStyleSheet("color: #FFFFFF;")
         self.btn_reload.setEnabled(False)
         self.ip_fetcher.start()
@@ -298,23 +298,23 @@ class GhostNetApp(QMainWindow):
     def on_ip_fetched(self, res, is_error):
         self.lbl_ip.setText(res)
         if is_error:
-            self.lbl_status.setText("CONN_ERROR")
-            self.lbl_status.setStyleSheet("color: #FF4444;")
+            self.lbl_status.setText("SYS.CONN_ERROR")
+            self.lbl_status.setStyleSheet("color: #D52941;")
         else:
             if res in self.history:
-                self.lbl_status.setText("REPEATED_IP_WARN")
-                self.lbl_status.setStyleSheet("color: #FF4444;")
+                self.lbl_status.setText("SYS.REPEATED_IP_WARN")
+                self.lbl_status.setStyleSheet("color: #D52941;")
                 # Atualiza os logs para o asterisco pular para o IP repetido
                 self.update_hud_text()
             else:
-                self.lbl_status.setText("SECURE_CONNECTION")
-                self.lbl_status.setStyleSheet("color: #44FF44;")
+                self.lbl_status.setText("SYS.SECURE_CONNECTION")
+                self.lbl_status.setStyleSheet("color: #00916E;")
                 self.save_ip(res)
         self.btn_reload.setEnabled(True)
 
     def on_update_available(self, v_new):
-        self.version_btn.setText(f"UPDATE_READY // v{v_new}")
-        self.version_btn.setStyleSheet("color: #44FF44; font-weight: bold;")
+        self.version_btn.setText(f"SYS.UPDATE_READY // v{v_new}")
+        self.version_btn.setStyleSheet("color: #00916E; font-weight: bold;")
 
     # Mover Janela
     def mousePressEvent(self, event):
