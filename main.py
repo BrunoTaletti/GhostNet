@@ -209,7 +209,7 @@ class GhostNetApp(QMainWindow):
         content_layout.addWidget(self.lbl_status)
 
         # Botão de Ação
-        self.btn_reload = QPushButton("// SYS.SYNC_IP //")
+        self.btn_reload = QPushButton("SYS.SYNC_IP")
         self.btn_reload.setObjectName("ActionBtn")
         self.btn_reload.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
         self.btn_reload.clicked.connect(self.reload_ip)
